@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { ConfigModule } from '@nestjs/config';
-import authConfig from './config/auth.config';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth/auth.guard';
-import { RolesGuard } from './guards/roles.guard';
 
-// TODO: Create separate config files: https://www.tomray.dev/nestjs-config
+import { AuthGuard } from './auth/auth.guard';
+import { RolesGuard } from './core/guards/roles.guard';
+
+import authConfig from './core/config/auth.config';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,7 +19,7 @@ import { RolesGuard } from './guards/roles.guard';
     AuthModule,
     UsersModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
     {
       provide: APP_GUARD,
@@ -29,7 +29,6 @@ import { RolesGuard } from './guards/roles.guard';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    AppService,
   ],
 })
 export class AppModule {}
