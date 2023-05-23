@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import authConfig from './config/auth.config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 // TODO: Create separate config files: https://www.tomray.dev/nestjs-config
 @Module({
@@ -23,6 +24,10 @@ import { AuthGuard } from './auth/auth.guard';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     AppService,
   ],
