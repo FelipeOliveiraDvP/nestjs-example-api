@@ -5,20 +5,22 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Patch,
   Put,
   Param,
 } from '@nestjs/common';
+import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { Public } from 'src/core/decorators';
 import {
   ChangePasswordRequestDto,
   LoginRequestDto,
   RegisterRequestDto,
   SendEmailRequestDto,
+  UpdateProfileRequestDto,
 } from './dto';
-import { UpdateProfileRequestDto } from './dto/update-profile-request.dto';
+import { AccessTokenResponse } from './responses';
+import { Public } from 'src/core/decorators';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -26,6 +28,9 @@ export class AuthController {
   @Post('login')
   @Public()
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    type: AccessTokenResponse,
+  })
   login(@Body() loginRequestDto: LoginRequestDto) {
     return this.authService.login(loginRequestDto);
   }
@@ -53,41 +58,46 @@ export class AuthController {
     return 'Valida o token, e altera a senha do usuário';
   }
 
-  @Patch('verify/:userId')
-  sendVerify(@Param('userId') userId: string) {
+  @Post('verify')
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  sendVerify(@Body() sendEmailRequestDto: SendEmailRequestDto) {
     return 'Envia um e-mail de verificação para um usuário inativo e não verificado.';
   }
 
-  @Get('verify/:userId')
-  verifyAccount(
-    @Param('userId') userId: string,
-    @Body() sendEmailRequestDto: SendEmailRequestDto,
-  ) {
+  @Get('verify/:token')
+  @ApiBearerAuth()
+  verifyAccount(@Param('token') token: string) {
     return 'Verifica a conta, ativa o usuário e registra a data de verificação';
   }
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   refresh() {
     return 'Retorna um novo token de acesso para o usuário';
   }
 
   @Get('profile')
+  @ApiBearerAuth()
   getProfile() {
     return 'Retorna o perfil do usuário';
   }
 
   @Put('profile')
+  @ApiBearerAuth()
   updateProfile(@Body() updateProfileRequestDto: UpdateProfileRequestDto) {
     return 'Atualiza algumas informações do perfil';
   }
 
   @Put('password')
+  @ApiBearerAuth()
   changePassword(@Body() changePasswordRequestDto: ChangePasswordRequestDto) {
     return 'Atualiza a senha do usuário';
   }
 
   @Get('logout')
+  @ApiBearerAuth()
   logout() {
     return 'Cancelar o token e sair da conta';
   }
