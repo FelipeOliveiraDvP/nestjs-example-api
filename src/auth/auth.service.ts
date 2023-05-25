@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
+import { LoginRequestDto } from './dto/login-request.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,20 +12,23 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signIn(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+  // TODO: hash compare user password
+  async login({ email, password }: LoginRequestDto): Promise<any> {
+    const user = await this.usersService.findOne(email);
 
-    if (user?.password !== pass) {
+    if (user?.password !== password) {
       throw new UnauthorizedException();
     }
 
-    const { id, roles } = user;
-    const payload = { sub: id, username: user.username, roles };
+    const { id, name } = user;
+    const payload = { sub: id, name };
 
     return {
-      access_token: await this.jwtService.signAsync(payload, {
+      token: await this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('jwtSecret'),
       }),
     };
   }
+
+  // TODO: Register user
 }

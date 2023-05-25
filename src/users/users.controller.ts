@@ -1,17 +1,21 @@
-import { Controller, Delete, Get } from '@nestjs/common';
-import { Roles } from 'src/core/decorators/roles.decorator';
-import { Role } from 'src/core/enums/role.enum';
+import { Controller, Post, Get } from '@nestjs/common';
+
+import { UsersService } from './users.service';
+import { Public } from 'src/core/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
+  constructor(private usersService: UsersService) {}
+
   @Get()
-  findAll() {
-    return 'Lista de usuários';
+  @Public()
+  async findAll() {
+    return this.usersService.findAll();
   }
 
-  @Delete()
-  @Roles(Role.Admin)
-  removeUser() {
-    return 'Remover um usuário';
+  @Post()
+  @Public()
+  async create() {
+    return 'Cadastrar um usuário';
   }
 }

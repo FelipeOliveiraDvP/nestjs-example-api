@@ -6,11 +6,10 @@ import {
   HttpStatus,
   Post,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { Public } from 'src/core/decorators/public.decorator';
+import { LoginRequestDto } from './dto/login-request.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,14 +18,13 @@ export class AuthController {
   @Post('login')
   @Public()
   @HttpCode(HttpStatus.OK)
-  signIn(@Body() signInDto: Record<string, any>) {
-    console.log(signInDto);
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  login(@Body() loginRequestDto: LoginRequestDto) {
+    return this.authService.login(loginRequestDto);
   }
 
-  @Get('profile')
-  @UseGuards(AuthGuard)
-  getProfile(@Request() req) {
-    return req.user;
+  @Post('register')
+  @Public()
+  register(@Body() loginRequestDto: LoginRequestDto) {
+    return this.authService.login(loginRequestDto);
   }
 }
