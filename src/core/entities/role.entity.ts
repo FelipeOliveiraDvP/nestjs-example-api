@@ -8,7 +8,7 @@ import {
 import { Timestamps } from './commons/timestamps';
 import { Claim } from './claim.entity';
 
-@Entity()
+@Entity('roles')
 export class Role extends Timestamps {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity()
+@Entity('tokens')
 export class Token {
   @PrimaryGeneratedColumn('uuid')
   id: string;

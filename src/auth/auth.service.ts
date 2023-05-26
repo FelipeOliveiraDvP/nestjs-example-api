@@ -14,21 +14,16 @@ export class AuthService {
 
   // TODO: hash compare user password
   async login({ email, password }: LoginRequestDto): Promise<any> {
-    const user = await this.usersService.findOne(email);
-
-    if (user?.password !== password) {
-      throw new UnauthorizedException();
-    }
-
-    const { id, name } = user;
-    const payload = { sub: id, name };
-
-    return {
-      token: await this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('jwtSecret'),
-      }),
-    };
+    // const user = await this.usersService.findOne(email);
+    // if (user?.password !== password) {
+    //   throw new UnauthorizedException();
+    // }
+    // const { id, name } = user;
+    // const payload = { sub: id, name };
+    // return {
+    //   token: await this.jwtService.signAsync(payload, {
+    //     secret: this.configService.get<string>('jwtSecret'),
+    //   }),
+    // };
   }
-
-  // TODO: Register user
 }

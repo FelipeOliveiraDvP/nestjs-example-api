@@ -5,10 +5,10 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Module } from './module.entity';
+import { Feature } from './feature.entity';
 import { Role } from './role.entity';
 
-@Entity()
+@Entity('claims')
 export class Claim {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -19,8 +19,8 @@ export class Claim {
   @Column({ type: 'varchar', length: 100, unique: true })
   value: string;
 
-  @ManyToOne(() => Module, (module) => module.claims)
-  module: Module;
+  @ManyToOne(() => Feature, (feature) => feature.claims)
+  feature: Feature;
 
   @ManyToMany(() => Role, (role) => role.claims)
   roles: Role[];
