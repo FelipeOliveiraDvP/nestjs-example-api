@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 
 import { AuthModule } from './auth/auth.module';
@@ -9,8 +10,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { RolesGuard } from './core/guards/roles.guard';
 
 import authConfig from './core/config/auth.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { getTypeOrmModuleOptions } from './core/providers/database';
+import { dbOptions } from './data-source';
 
 // TODO: Add settings to migrations
 @Module({
@@ -22,8 +22,8 @@ import { getTypeOrmModuleOptions } from './core/providers/database';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        ...getTypeOrmModuleOptions(),
+      useFactory: () => ({
+        ...dbOptions,
       }),
     }),
     AuthModule,

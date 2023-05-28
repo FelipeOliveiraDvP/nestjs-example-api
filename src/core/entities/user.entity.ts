@@ -35,7 +35,7 @@ export class User extends Timestamps {
   @Column({ type: 'boolean', default: false })
   active: boolean;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   verifiedAt: Date;
 
   @OneToOne(() => Role)
